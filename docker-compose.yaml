@@ -1,0 +1,33 @@
+services:
+  ansible:
+    build:
+      context: .
+      dockerfile: ./ansible/Dockerfile
+    container_name: ansible_host
+    networks:
+      - ansible
+    volumes:
+      - ./ansible:/ansible
+    command: tail -f /dev/null
+  
+  worker1:
+    build:
+      context: .
+      dockerfile: ./worker1/Dockerfile
+    container_name: worker1
+    networks:
+      - ansible
+    command: tail -f /dev/null
+
+  worker2:
+    build:
+      context: .
+      dockerfile: ./worker2/Dockerfile
+    container_name: worker2
+    networks:
+      - ansible
+    command: tail -f /dev/null
+
+networks:
+  ansible:
+    driver: bridge
