@@ -1,13 +1,14 @@
 services:
   ansible:
     build:
-      context: .
-      dockerfile: ./ansible/Dockerfile
-    container_name: ansible_host
+      context: ./ansible
+      dockerfile: Dockerfile
+    container_name: ansible
     networks:
       - ansible
     volumes:
       - ./ansible:/ansible
+      - ./ansible/config/hosts:/etc/hosts
     command: tail -f /dev/null
   
   worker1:
