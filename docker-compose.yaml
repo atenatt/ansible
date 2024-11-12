@@ -9,6 +9,7 @@ services:
     volumes:
       - ./ansible:/ansible
       - ./ansible/config/hosts:/etc/hosts
+      - ./ansible/ssh:/ansible/ssh  # Mapeando o diretório de chaves SSH
     command: tail -f /dev/null
   
   worker1:
@@ -18,7 +19,9 @@ services:
     container_name: worker1
     networks:
       - ansible
-    command: tail -f /dev/null
+    volumes:
+      - ./ansible/ssh:/ansible/ssh  # Mapeando o diretório de chaves SSH com id_rsa.pub
+    command: /bin/sh -c "mkdir -p /root/.ssh && cat /ansible/ssh/id_rsa.pub >> /root/.ssh/authorized_keys && tail -f /dev/null"
 
   worker2:
     build:
@@ -27,7 +30,9 @@ services:
     container_name: worker2
     networks:
       - ansible
-    command: tail -f /dev/null
+    volumes:
+      - ./ansible/ssh:/ansible/ssh  # Mapeando o diretório de chaves SSH com id_rsa.pub
+    command: /bin/sh -c "mkdir -p /root/.ssh && cat /ansible/ssh/id_rsa.pub >> /root/.ssh/authorized_keys && tail -f /dev/null"
 
 networks:
   ansible:
